@@ -90,6 +90,7 @@ class BBCooker:
     def __init__(self, configuration, server_registration_cb, savedenv={}):
         self.status = None
         self.appendlist = {}
+        self.appliedappendlist = []
         self.skiplist = {}
 
         self.server_registration_cb = server_registration_cb
@@ -708,14 +709,10 @@ class BBCooker:
         return 0
 
     def show_appends_with_no_recipes( self ):
-        recipes = set(os.path.basename(f)
-                      for f in self.status.pkg_fn.iterkeys())
-        recipes |= set(os.path.basename(f)
-                      for f in self.skiplist.iterkeys())
-        appended_recipes = self.appendlist.iterkeys()
         appends_without_recipes = [self.appendlist[recipe]
-                                   for recipe in appended_recipes
-                                   if recipe not in recipes]
+                                   for recipe in self.appendlist
+                                   if recipe not in self.appliedappendlist]
+
         if appends_without_recipes:
             appendlines = ('  %s' % append
                            for appends in appends_without_recipes
@@ -1477,10 +1474,14 @@ class BBCooker:
         Returns a list of .bbappend files to apply to fn
         NB: collect_bbfiles() must have been called prior to this
         """
+        filelist = []
         f = os.path.basename(fn)
-        if f in self.appendlist:
-            return self.appendlist[f]
-        return []
+        for bbappend in self.appendlist:
+            if (bbappend == f) or ('%' in bbappend and bbappend.startswith(f[:bbappend.index('%')])):
+                self.appliedappendlist.append(bbappend)
+                for filename in self.appendlist[bbappend]:
+                    filelist.append(filename)
+        return filelist
 
     def pre_serve(self):
         # Empty the environment. The environment will be populated as
