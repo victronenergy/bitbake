@@ -556,6 +556,7 @@ def preserved_envvars_exported():
         'SHELL',
         'TERM',
         'USER',
+        'GPG_AGENT_INFO',
     ]
 
 def preserved_envvars():
