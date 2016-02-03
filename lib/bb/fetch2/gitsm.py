@@ -72,7 +72,7 @@ class GitSM(Git):
         os.chdir(ud.destdir)
         submodules = self.uses_submodules(ud, d)
         if submodules:
-            runfetchcmd("cp -r " + ud.clonedir + "/modules " + ud.destdir + "/.git/", d)
+            runfetchcmd("git checkout " + ud.revisions[ud.names[0]], d)
             runfetchcmd("git submodule init", d)
             runfetchcmd("git submodule update", d)
 
