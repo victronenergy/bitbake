@@ -109,7 +109,9 @@ class GitSM(Git):
                         url = "gitsm://" + uris[module].replace(':/', '/', 1)
                     else:
                         # Relative reference, no way to know if this is right!
-                        logger.warning("Submodule included by %s refers to relative ssh reference %s.  References may fail if not absolute." % (ud.url, uris[module]))
+                        # JHO: nonsense, relative paths contain .., absolute otherwise,
+                        # should check for that instead. Disabling this noise...
+                        # logger.warning("Submodule included by %s refers to relative ssh reference %s.  References may fail if not absolute." % (ud.url, uris[module]))
                         url = "gitsm://" + uris[module].replace(':', '/', 1)
                 else:
                     # This has to be a file reference
