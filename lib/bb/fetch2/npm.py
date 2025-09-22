@@ -234,11 +234,7 @@ class Npm(FetchMethod):
             with open(ud.resolvefile, "r") as f:
                 url = f.read()
 
-            # Avoid conflicts between the environment data and:
-            # - the proxy url checksum
-            data = bb.data.createCopy(d)
-            data.delVarFlags("SRC_URI")
-            ud.proxy = Fetch([url], data)
+            ud.proxy = Fetch([url], d)
 
     def _get_proxy_method(self, ud, d):
         self._setup_proxy(ud, d)
