@@ -64,12 +64,7 @@ def npm_localfile(package, version=None):
     return os.path.join("npm2", filename)
 
 def npm_integrity(integrity):
-    """
-    Get the checksum name and expected value from the subresource integrity
-        https://www.w3.org/TR/SRI/
-    """
-    algo, value = integrity.split("-", maxsplit=1)
-    return "%ssum" % algo, base64.b64decode(value).hex()
+    pass
 
 def npm_unpack(tarball, destdir, d):
     """Unpack a npm tarball"""
@@ -222,17 +217,6 @@ class Npm(FetchMethod):
 
             uri = URI(tarball_url)
             uri.params["downloadfilename"] = ud.localfile
-
-            integrity = view.get("dist", {}).get("integrity")
-            shasum = view.get("dist", {}).get("shasum")
-
-            if integrity is not None:
-                checksum_name, checksum_expected = npm_integrity(integrity)
-                uri.params[checksum_name] = checksum_expected
-            elif shasum is not None:
-                uri.params["sha1sum"] = shasum
-            else:
-                raise FetchError("Invalid 'dist.integrity' in view", ud.url)
 
             return str(uri)
 
