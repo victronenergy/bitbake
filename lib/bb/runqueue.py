@@ -169,6 +169,9 @@ class RunQueueScheduler(object):
         openSUSE /proc/pressure/* files have readable file permissions but when read the error EOPNOTSUPP (Operation not supported)
         is returned.
         """
+        self.check_pressure = False
+        return
+
         if self.rq.max_cpu_pressure or self.rq.max_io_pressure or self.rq.max_memory_pressure:
             try:
                 with open("/proc/pressure/cpu") as cpu_pressure_fds, \
